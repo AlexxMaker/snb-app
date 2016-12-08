@@ -7,7 +7,8 @@ var App = React.createClass({
       weight: '',
       height: '',
       gender: 'Male',
-      paramError: ''
+      paramError: '',
+      bodyIndex: 'N'
     };
   },
 
@@ -51,19 +52,38 @@ var App = React.createClass({
     };
   },
 
+  bodyMassIndex: function () {
+    let bodyIndexCalc = this.state.weight/Math.pow(((this.state.height)/100), 2);
+    console.log(bodyIndexCalc);
+
+    if (bodyIndexCalc > 24.99) {
+      this.setState({
+        bodyIndex: 'F'
+      });
+    } else {
+      this.setState({
+        bodyIndex: 'N'
+      });
+    };
+  },
+
   snowboardLengthCalculation: function () {
+    this.bodyMassIndex();
 
    if (!this.parameterCheck()) return;
 
    if (this.state.gender === "Male") {
       let snowboardLength = Math.floor((this.state.weight * 0.3) + 136);
-      alert("Your optimal snowboard length is " + snowboardLength + "cm");
+      console.log("Your optimal snowboard length is " + snowboardLength + "cm");
     } else if (this.state.gender === "Female") {
       let snowboardLength = Math.floor((this.state.weight * 0.4) + 127);
-      alert("Your optimal snowboard length is " + snowboardLength + "cm");
-    } else {
-      return 0;
+      console.log("Your optimal snowboard length is " + snowboardLength + "cm");
     };
+
+    if (this.state.bodyIndex === 'F') {
+      let snowboardLength = snowboardLength + 2;
+      console.log('Snb length including IMT is: ' + snowboardLength);
+    }
   },
 
   render: function () {
@@ -84,6 +104,7 @@ var App = React.createClass({
           <h1>Weight is: {this.state.weight}cm</h1>
           <h1>Height is: {this.state.height}cm</h1>
           <h1>Gender is: {this.state.gender}</h1>
+          <h1>BodyIndex is: {this.state.bodyIndex}</h1>
           <h1>{this.state.paramError}</h1>
 
           <button className="btn-calc" onClick={this.snowboardLengthCalculation}>Calculate</button>
